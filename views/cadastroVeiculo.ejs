@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<%-include('partial/header')%>
+<link rel="stylesheet" href="/cadastroVeiculo.css">
+<body>
+
+    <div class="form-container">
+        <h2>Cadastro de Veículo</h2>
+        <form action="#" method="POST">
+            
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" name="marca" placeholder="Ex: Toyota" required>
+
+            <label for="modelo">Modelo:</label>
+            <input type="text" id="modelo" name="modelo" placeholder="Ex: Corolla" required>
+
+            <label for="ano">Ano de Fabricação:</label>
+            <input type="number" id="ano" name="ano" min="1900" max="2024" placeholder="Ex: 2020" required>
+
+            <label for="placa">Placa:</label>
+            <input type="text" id="placa" name="placa" placeholder="Ex: ABC-1234" required>
+
+            <label for="combustivel">Combustível:</label>
+            <select id="combustivel" name="combustivel" required>
+                <option value="">Selecione o combustível</option>
+                <option value="gasolina">Gasolina</option>
+                <option value="alcool">Álcool</option>
+                <option value="diesel">Diesel</option>
+                <option value="gnv">GNV</option>
+            </select>
+
+            <label for="cor">Cor:</label>
+            <input type="text" id="cor" name="cor" placeholder="Ex: Preto" required>
+
+            <button type="submit" class="btn">Cadastrar</button>
+        </form>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+
+<%-include('partial/header')%>
+<link rel="stylesheet" href="/endereco.css">
+<body>
+
+    <div class="form-container">
+        <h2>Formulário de Endereço</h2>
+        <form action="#" method="POST">
+            <label for="cep">Cep:</label>
+            <input type="text" id="cep" maxlength="9" required oninput= "coletaDados()">
+
+            <label for="rua">Rua:</label>
+            <input type="text" id="rua" name="rua" required>
+
+            <label for="numero">Número:</label>
+            <input type="text" id="numero" name="numero" required>
+
+            <label for="bairro">Bairro:</label>
+            <input type="text" id="bairro" name="bairro" required>
+
+            <label for="cidade">Cidade:</label>
+            <input type="text" id="cidade" name="cidade" required>
+
+            <label for="estado">Estado:</label>
+            <select id="estado" name="estado" required>
+
+            </select>
+
+
+
+            <center><button type="button" class="btn btn-primary" >Enviar</button></center>
+        </form>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Formulário de Endereço</p>
+    </div>
+
+
+<script>
+   async function coletaDados(){
+        const cep = $("#cep").val()
+
+        if(cep.length === 8){
+            $.ajax({
+            url: `/cep/${cep}`,
+            method: 'GET',
+            contentType: 'application/json'
+        }).done((response) =>{
+            if(response){
+                const cep = response.cep
+                const rua = response.logradouro
+                const bairro = response.bairro
+                const cidade = response.localidade
+                const estado = response.estado
+
+                document.getElementById('rua').value = rua
+                document.getElementById('cidade').value = cidade
+                document.getElementById('estado').value = estado
+                document.getElementById('bairro').value = bairro
+            }
+        }).fail((erro)=>{
+            if(erro){
+                alert('erro')
+            }
+        })
+
+            const p1_cep = cep.substring(0, 5)
+            const p2_cep = cep.substring(5, )
+            const cepFormatado = `${p1_cep}-${p2_cep}`
+            document.getElementById('cep').value = cepFormatado
+            
+        }
+        
+    }
+</script>
+</body>
+</html>

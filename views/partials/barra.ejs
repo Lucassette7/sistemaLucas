@@ -1,0 +1,33 @@
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+<!-- Link para o CSS do SweetAlert2 -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.9/dist/sweetalert2.min.css" rel="stylesheet">
+
+<!-- Link para o JS do SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.9/dist/sweetalert2.min.js"></script>
+
+
+<div class="sidebar">
+    <h4>Dashboard</h4>
+    <a href="/dashboard"><i class="fas fa-chart-line"></i></i> DASHBOARD</a>
+    <a href="/perfil"><i class="ri-user-line"></i> PERFIL</a>
+    <a href="/produtos"><i class="ri-dropbox-fill"></i> CADASTRAR PRODUTOS</a>
+    <a href="/funcionarios"><i class="fas fa-users"></i> FUNCIONARIOS</a>
+    <a href="/estoque"><i class="ri-bar-chart-box-line"></i> ESTOQUE</a>
+    <a onclick="sair()"><i class="ri-logout-box-fill"></i> SAIR</a>
+</div>
+<script>
+    function sair(){
+        swal.fire({
+            title: 'Deseja mesmo sair?',
+            icon: 'warning',
+            showCancelButton: true, // Mostrar botão de cancelar
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+        }).then((response)=>{
+            if(response.isConfirmed){
+                window.location.href = '/'
+            }
+        })
+    }
+</script>
+

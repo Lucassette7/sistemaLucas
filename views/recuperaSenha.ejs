@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperação de Senha</title>
+    <link rel="stylesheet" href="recuperaSenha.css">
+</head>
+<body style="background-image: url('imagemFundoLogin/telaFundoLogin.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <%-include('partials/header')%>
+
+    <div class="container">
+        <div class="form-container">
+            <h2>Recuperar Senha</h2>
+            <form >
+                <div class="input-group">
+                    <label for="nova-senha">NOVA SENHA</label>
+                    <input type="password" id="novaSenha" name="novaSenha" placeholder="Digite sua senha" required>
+                </div>
+                <div class="input-group">
+                    <label for="nova-senha">CONFIRMAR NOVA SENHA</label>
+                    <input type="password" id="confirmaNovaSenha" name="confirmaNovaSenha" placeholder="Digite sua senha" required>
+                </div>
+                <button type="button" class="submit-btn" onclick="resetaSenha()" >Recuperar Senha</button>
+            </form>
+            <div class="back-link">
+                <a href="/">Voltar para o login</a>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function resetaSenha() {
+    const novaSenha = $("#novaSenha").val();
+    const confirmaNovaSenha = $("#confirmaNovaSenha").val();
+
+    // Verifica se as senhas coincidem
+    if (novaSenha !== confirmaNovaSenha) {
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "As senhas não coincidem!",
+            showConfirmButton: false,
+            timer: 1500
+        });
+        return;
+    }
+
+    const body = { senha: novaSenha, confirmaSenha: confirmaNovaSenha };
+
+    $.ajax({
+        url: '/senhaNova',
+        method: 'PUT',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(body)
+    }).done((response) => {
+        // Verificando se o campo 'success' da resposta é true
+        if (response.success) {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: `Senha alterada com sucesso!`,
+                showConfirmButton: false,
+                timer: 1500
+            }).then(()=>{
+                window.location.href = '/'
+            })
+        } else {
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: response.message || 'Erro ao alterar a senha',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    }).fail((jqXHR, textStatus, errorThrown) => {
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: 'Erro ao processar a requisição',
+            showConfirmButton: false,
+            timer: 1500
+        });
+    });
+}
+
+</script>
+
+</body>
+</html>

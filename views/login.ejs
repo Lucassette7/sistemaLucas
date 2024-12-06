@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <link rel="stylesheet" href="login.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+
+        
+
+    <body style="background-image: url('imagemFundoLogin/telaFundoLogin.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <%- include('partials/header') %>
+        <!-- Usando d-flex para centralizar o conteúdo -->
+        <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
+            <div class="col-md-4 p-4 bg-white rounded shadow-sm">
+                <div>
+                    <center><h2>SEVEN SYSTEM</h2></center>
+                    <center><h5>Controle de estoque</h5></center>
+                </div>
+                <hr>
+                <h3 class="text-center mb-4">LOGIN <i class="ri-git-repository-private-line"></i></h3> 
+                <form action=""> 
+                    <!-- Campo de E-mail -->
+                    <div class="mb-3">
+                        <label for="cnpj" class="form-label">CNPJ</label>
+                        <input type="cnpj" id="cnpjLogin" class="form-control" placeholder="Digite o Cnpj" maxlength="14" required>
+                    </div>
+
+                    <!-- Campo de Senha -->
+                    <div class="mb-3">
+                        <label for="senha" class="form-label">Senha</label>
+                        <input type="password" id="senha1" class="form-control" placeholder="Digite sua senha" required>
+                    </div>
+
+                    <!-- Botão de Enviar -->
+                    <button type='button' class="btn btn-primary w-100" onclick="entrar()" >Entrar</button>
+                </form>
+
+                <!-- Link para Recuperação de Senha -->
+                <div class="mt-3 text-center">
+                    <a href="#" class="text-muted" id="cadastre"> <strong>Cadastrar - se</strong></a>
+                </div>
+                <div class="mt-3 text-center">
+                    <a href="#" onclick="resetaSenha()" class="text-muted"> Esqueceu sua senha?</a>
+                </div>
+                    
+            </div>
+                
+        </div>
+
+            
+
+        <!-- O Modal cadastro -->
+        <div class="modal" id="myModal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeModal">&times;</span>
+                <center><h2><strong>CADASTRE SUA EMPRESA</strong></h2></center>
+                <label for="nome">NOME</label>
+                <input type="text" id="nome">
+                <hr>
+                <label for="cnpj">CNPJ</label>
+                <input type="text" id="cnpj" maxlength="14">
+                <hr>
+                <label for="email">EMAIL</label>
+                <input type="email" id="email">  <!-- Atualizado para 'email' -->
+                <hr>
+                <label for="telefone">TELEFONE</label>
+                <input type="telefone" id="telefone" maxlength="11" oninput="formataTelefone()"> 
+                <hr>
+                <label for="senha">SENHA</label>
+                <input type="password" id="senha">
+                <hr>
+                <label for="cep">CEP</label>
+                <input type="cep" id="cep" maxlength="8" oninput="formataCep()">
+                <hr>
+                <label for="estado">ESTADO</label>
+                <input type="estado" id="estado">
+                <hr>
+                <label for="cidade">CIDADE</label>
+                <input type="cidade" id="cidade">
+                <hr>
+                <label for="bairro">BAIRRO</label>
+                <input type="bairro" id="bairro">
+                <hr>
+                <label for="rua">RUA</label>
+                <input type="rua" id="rua">
+                <hr>
+                <label for="numero">NUMERO</label>
+                <input type="numero" id="numero">
+                <br>
+                <button class="btn btn-primary" onclick="salvaDados()">CADASTRAR</button>
+            </div>
+        </div>
+
+
+
+
+        <!-- Modal para esqueceu a senha -->
+         <div class="modal" id="modalResetaSenha">
+            <div class="modal-content">
+                <span class="close-btn" id="closeModalReseta">&times;</span>
+                <br>
+                <label for="email">Email</label>
+                <input type="email" id="emailResetaSenha" placeholder="Digite um email para recuperar a senha">
+                <hr>
+                <button type="button" onclick="enviarEmail()">Enviar email de recuperação</button>
+            </div>
+         </div>
+
+        
+
+        <script>
+
+
+        async function salvaDados(){
+            const nome = $("#nome").val()
+            const cnpj = $("#cnpj").val()
+            const email = $("#email").val()
+            const telefone = $("#telefone").val()
+            const senha = $("#senha").val()
+            const cep = $("#cep").val()
+            const estado = $("#estado").val()
+            const cidade = $("#cidade").val()
+            const bairro = $("#bairro").val()
+            const rua = $("#rua").val()
+            const numero = $("#numero").val()
+
+
+            if(nome && cnpj && email && telefone && senha && cep && estado && cidade && bairro && rua && numero){
+                const data = {nome, cnpj, email, telefone, senha, cep, estado, cidade, bairro, rua, numero}
+                        
+                $.ajax({
+                    url:'/salvaDados',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response){
+                        if(response.success){
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Cadastrado com sucesso",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            document.getElementById('myModal').style.display = 'none'
+                            document.getElementById('nome').value= ''
+                            document.getElementById('cnpj').value= ''
+                            document.getElementById('email').value = ''
+                            document.getElementById('senha').value = ''
+                        }
+                        else{
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "error",
+                                title: "Erro ao cadastrar",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+                    }
+                })
+            }else{
+                Swal.fire({
+                    position: "top-end",
+                    icon: "error",
+                    title: "Preencha todos os campos",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }  
+        }
+
+        //entrar
+        function entrar(){
+            const cnpj = $("#cnpjLogin").val()
+            const senha = $("#senha1").val()
+            const body = {cnpj, senha}
+
+            $.ajax({
+                url: '/validaDados',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(body),
+                success: function(response) {
+                    if (response.success) {
+                        // Acesso correto aos dados do usuário
+                        const {nome} = response.user;  // Agora response.user contém os dados do usuário
+                        
+                        sessionStorage.setItem('cnpjLogin', cnpj)
+                        
+
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: `Bem Vindo ao estoque da ${nome}`,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            // Definindo o ID no sessionStorage
+                            sessionStorage.setItem('id', response.user.id);  // Agora estamos acessando o ID do usuário
+                            // Redireciona para a página do dashboard
+                            window.location.href = '/dashboard';
+                        });
+                    } else {
+                        // Caso a autenticação falhe
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "error",
+                            title: response.message || "Cnpj ou senha incorretos",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                },
+                error: function(err) {
+                    console.error("Erro na requisição:", err);
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: "Erro ao processar a solicitação",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+        }
+
+
+
+        // Formata cep
+        function formataCep(){
+            const cep = $("#cep").val()
+            if(cep.length == 8){
+                $.ajax({
+                    url: `/cep/${cep}`,
+                    method: 'GET',
+                    contentType: 'application/json'
+                }).done((response)=>{
+                        if(response){
+                            const rua = response.logradouro
+                            document.getElementById('rua').value = rua
+                            const bairro = response.bairro
+                            document.getElementById('bairro').value = bairro
+                            const cidade = response.localidade
+                            document.getElementById('cidade').value = cidade
+                            const estado = response.estado
+                            const uf = response.uf
+                            const estadoUf = `${estado}/${uf}`
+                            document.getElementById('estado').value = estadoUf
+                        }
+                    })
+            }
+        }
+
+        //Formata telefone
+        function formataTelefone(){
+            const telefone = document.getElementById('telefone').value
+            if(telefone.length == 11){
+                const ddd = telefone.substring(0,2)
+                const numeroRestante = telefone.substring(2,)
+                const numeroFormatado = `(${ddd})${numeroRestante}`
+                document.getElementById('telefone').value = numeroFormatado
+            }
+            
+        }
+
+
+        //modal
+        // Obtém os elementos
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("cadastre");
+        var span = document.getElementById("closeModal");
+
+        // Quando o usuário clica no botão, abre o modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+            document.getElementById('nome').value = ''
+            document.getElementById('cnpj').value = ''
+            document.getElementById('email').value = ''
+            document.getElementById('telefone').value = ''
+            document.getElementById('senha').value = ''
+            document.getElementById('cep').value = ''
+            document.getElementById('estado').value = ''
+            document.getElementById('cidade').value = ''
+            document.getElementById('bairro').value = ''
+            document.getElementById('rua').value = ''
+            document.getElementById('numero').value = ''
+        }
+        // Quando o usuário clica no "x", fecha o modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        // Quando o usuário clica fora do modal, fecha ele
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.getElementById('modalResetaSenha').style.display = 'none'
+        //ModalResetaSenha
+        function resetaSenha(){
+            document.getElementById('modalResetaSenha').style.display = 'block'
+            const fecharModal = document.getElementById('closeModalReseta')
+            if(fecharModal){
+                fecharModal.addEventListener("click", function(){
+                    document.getElementById('modalResetaSenha').style.display = 'none'
+                })
+            }
+
+        }
+
+        //Enviar email para recuperar senha
+        function enviarEmail(){
+            const email = $("#emailResetaSenha").val()
+            swal.fire({
+                position: "top-end",
+                icon: "warning",
+                title: "Aguarde...",
+                showConfirmButton: false,
+                
+            })
+            
+            $.ajax({
+                url: `/enviarEmail/${email}`,
+                method: 'GET',
+                contentType: 'application/json'
+            }).done((response)=>{
+                if(response){
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Email enviado com sucesso",
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+                }           
+                }).fail((erro)=>{
+                    if(erro){
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "error",
+                            title: "Erro ao enviar o email",
+                            showConfirmButton: false,
+                            timer: 2000
+                        })
+                    }
+                })
+        }
+        
+
+
+
+        </script>
+
+    </body>
+</html>
+
+
+
+
+

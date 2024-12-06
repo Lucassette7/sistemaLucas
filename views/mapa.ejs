@@ -1,0 +1,153 @@
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <title>Maps and Places Autocomplete</title>
+    <script>
+        async function init() {
+            await customElements.whenDefined('gmp-map');
+
+            const map = document.querySelector('gmp-map');
+            const marker = document.querySelector('gmp-advanced-marker');
+            const placePicker = document.querySelector('gmpx-place-picker');
+            const infowindow = new google.maps.InfoWindow();
+
+            map.innerMap.setOptions({
+                mapTypeControl: false
+            });
+
+            placePicker.addEventListener('gmpx-placechange', () => {
+                const place = placePicker.value;
+
+                if (!place.location) {
+                    window.alert(
+                    "No details available for input: '" + place.name + "'"
+                );
+                    infowindow.close();
+                    marker.position = null;
+                    return;
+                }
+
+                if (place.viewport) {
+                    map.innerMap.fitBounds(place.viewport);
+                } else {
+                    map.center = place.location;
+                    map.zoom = 17;
+                }
+
+                marker.position = place.location;
+                infowindow.setContent(
+                    `<strong>${place.displayName}</strong><br>
+                    <span>${place.formattedAddress}</span>
+                `);
+                    infowindow.open(map.innerMap, marker);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+    <script type="module" src="https://unpkg.com/@googlemaps/extended-component-library@0.6">
+    </script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+            .place-picker-container {
+            padding: 20px;
+        }
+    </style>
+    </head>
+    <body>
+    <gmpx-api-loader key="AIzaSyCzKku_G_75RpbQJxxX1VvXY4TNh9EKBhw" solution-channel="GMP_GE_mapsandplacesautocomplete_v1">
+    </gmpx-api-loader>
+    <gmp-map center="40.749933,-73.98633" zoom="13" map-id="DEMO_MAP_ID">
+        <div slot="control-block-start-inline-start" class="place-picker-container">
+        <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
+        </div>
+        <gmp-advanced-marker></gmp-advanced-marker>
+    </gmp-map>
+    </body>
+</html>
+ -->
+
+
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Rota do Google Maps</title>
+    <label for="Local">Localização inicial:</label>
+    <input type="text" id="local">
+
+    <label for="destino">Destino:</label>
+    <input type="text" id="destino">
+
+    <button type="button" id="botao" onclick="calculateRoute()">Localizar</button>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbkrJJO8MeKu5q5vsL2TQYF__3t461P58&libraries=places,directions" async defer></script>
+    <script>
+        let map, directionsService, directionsRenderer;
+ 
+    function initMap() {
+       // Cria o mapa centrado em uma localidade
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: -23.1896, lng: -46.5333 }, // Localização de exemplo (Nova York)
+            zoom: 13,
+        });
+
+        // Inicializa o serviço de direções
+        directionsService = new google.maps.DirectionsService();
+ 
+       // Inicializa o renderer para mostrar a rota no mapa
+        directionsRenderer = new google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+ 
+       // Calcular e exibir a rota entre dois locais
+        calculateRoute();
+        }
+
+        function calculateRoute() {
+            const local = document.getElementById('local').value
+            const destino = document.getElementById('destino').value
+            const request = {
+            origin: `${local}`, // Origem
+            destination: `${destino}`, // Destino
+            travelMode: google.maps.TravelMode.DRIVING, // Pode mudar para WALKING, BICYCLING, TRANSIT
+        };
+ 
+        directionsService.route(request, function(response, status) {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    directionsRenderer.setDirections(response);
+                } else {
+                    alert('Não foi possível calcular a rota: ' + status);
+                }
+            });
+        }
+
+     // Inicializa o mapa quando a página for carregada
+        window.onload = initMap;
+</script>
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #map {
+        height: 100%;
+    }
+</style>
+</head>
+<body>
+<div id="map"></div>
+ </body>
+ </html>
+ 
+
+
+

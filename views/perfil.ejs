@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Configuração</title>
+
+    <%-include('partials/header')%>
+    <link rel="stylesheet" href="configuracao.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <%-include('partials/barra')%>
+    <!-- Container Principal -->
+    <div class="container">
+        <div class="settings-card">
+            <h2>Configurações da Conta</h2>
+
+            <div class="col-md-12 mb-12">
+                <h3>Alteração de Dados</h3>
+                <div class="setting-item">
+                    <label for="current-password">Alterar Email</label> &nbsp &nbsp &nbsp 
+                    <input type="text" id="email" placeholder="Novo email" class="form-control">
+                </div>
+                <div class="setting-item">
+                    <label for="current-password">Senha Atual</label> &nbsp &nbsp &nbsp &nbsp
+                    <input type="password" id="senhaAtual" placeholder="Digite sua senha atual" class="form-control">
+                </div>
+                <div class="setting-item">
+                    <label for="new-password">Nova Senha</label> &nbsp &nbsp &nbsp &nbsp
+                    <input type="password" id="novaSenha" placeholder="Digite sua nova senha" class="form-control">
+                </div>
+                <div class="setting-item">
+                    <label for="confirm-password">Confirmar Senha</label>
+                    <input type="password" id="confirmaNovaSenha" placeholder="Confirme sua nova senha" class="form-control">
+                </div>
+            </div>
+
+
+
+            <!-- Botão Salvar -->
+            <button class="btn" onclick="salvarMudancas()">Salvar Configurações</button> <br> <br>
+            
+        </div>
+    </div>
+
+<script>
+    //volta para o dashboard
+    function voltar(){
+        window.location.href = '/dashboard'
+    }
+
+    //-------------------------------------//
+
+    function salvarMudancas(){
+        const email = $("#email").val()
+        const senhaAtual = $("#senhaAtual").val()
+        const novaSenha = $("#novaSenha").val()
+        const confirmaSenha = $("#confirmaNovaSenha").val()
+        const cnpj = sessionStorage.getItem('cnpjLogin')
+        const body = {email, senhaAtual, novaSenha, confirmaSenha, cnpj}
+
+        
+        $.ajax({
+            url: '/atualizaPerfil',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(body)
+        }).done((response)=>{
+            if(response.success){
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Alterado com sucesso',
+                    position: 'top-end',
+                    timer: 1500
+                })
+            }
+        }).fail((response)=>{
+            if(!response){
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Falha ao alterar',
+                    position: 'top-end',
+                    timer: 1500
+                })
+            }
+        })
+    }
+
+</script>
+
+</body>
+</html>

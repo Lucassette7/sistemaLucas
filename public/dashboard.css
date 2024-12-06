@@ -1,0 +1,101 @@
+/* Estilos Globais */
+body {
+    background-color: #f4f7fa;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid {
+    padding: 30px;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #343a40;
+    color: white;
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #bbb;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+.sidebar a:hover {
+    background-color: #495057;
+    color: white;
+    border-radius: 5px;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Cards with stats */
+.stats-card {
+    background-color: #007bff;
+    color: white;
+}
+
+.stats-card .card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stats-card i {
+    font-size: 30px;
+}
+
+.stats-card h5 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.stats-card p {
+    font-size: 14px;
+}
+
+/* Chart container */
+.chart-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #343a40;
+    color: white;
+    margin-top: 30px;
+}

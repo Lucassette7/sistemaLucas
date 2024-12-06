@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<%-include('partials/header')%>
+<link rel="stylesheet" href="produtos.css">
+<link rel="stylesheet" href="dashboard.css">
+<body>
+        <!-- Sidebar -->
+        <%-include('partials/barra')%>
+    <center><div class="container">
+        <h1>Cadastro de Produto</h1>
+        <form class="product-form">
+            <div class="form-group">
+                <label for="product-name">Imagem do produto</label>
+                <input type="file" enctype="multipart/form-data" id="imagem-produto" name="imgProduto" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="product-name">Nome do Produto</label>
+                <input type="text" id="nome-produto" name="nome-produto" placeholder="Digite o nome do produto" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product-name">Código</label>
+                <input type="text" id="codigo" name="codigo" placeholder="Digite o código do produto" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade</label>
+                <input type="text" id="quantidade" name="quantidade" placeholder="Digite a quantidade" required oninput="validarNumero(event)">
+            </div>
+        
+            <div class="form-group">
+                <label for="product-description">Descrição</label>
+                <textarea id="descricao-produto" name="descricao-produto" placeholder="Digite uma descrição do produto" required></textarea>
+            </div>
+        
+            <div class="form-group">
+                <label for="produto-preco">Preço</label>
+                <input type="text" id="produto-preco" name="produto-preco" placeholder="Digite o preço" required oninput="validarNumero(event)">
+            </div>
+        
+            <div class="form-group">
+                <label for="categoria-produto">Categoria</label>
+                <select id="categoria-produto" onchange="pegaIdCategoriaProduto()" name="categoria-produto" required>
+                    <option value="">Selecione uma categoria</option>
+                    
+                </select>
+            </div>
+        
+            <button type="button" class="btn btn-primary" onclick="cadastraProduto();  salvaImagemPasta()">Cadastrar Produto</button>
+        </form>
+    </div></center>
+</body>
+<script>
+    //voltar para o dashboard
+    function voltar(){
+        window.location.href = '/dashboard'
+    }
+
+    // popula categoria
+    function buscaCategoria(){
+        $.ajax({
+            url: '/categoria',
+            method: 'GET',
+            contentType: 'application/json'
+        }).done((response)=>{
+            if(response){
+                const categoriaSelect = document.getElementById('categoria-produto') 
+                response.forEach(dados => {
+                    const option = document.createElement('option')
+                    option.value = dados.categoria
+                    option.textContent = dados.categoria
+                    categoriaSelect.appendChild(option)
+                });
+            }
+            
+        })
+    }
+
+    //busca id categoria_produto
+    let id_categoria2 = ''
+    function pegaIdCategoriaProduto(){
+        const categoria = document.getElementById('categoria-produto').value
+        $.ajax({
+            url: `/pegaidcategoria/${categoria}`,
+            method: 'GET',
+            contentType: 'application/json'
+        }).then((response)=>{
+            if(response){
+                const id_categoria = response[0].id_categoria_produto
+                id_categoria2 = id_categoria
+            }
+        })
+    }
+
+    //cadastrar produto
+    function cadastraProduto(){
+        const quantidade = $("#quantidade").val()
+        const nome_produto = $("#nome-produto").val()
+        const codigo = $("#codigo").val()
+        const descricao_produto = $("#descricao-produto").val()
+        const preco_produto = $("#produto-preco").val()
+        const img = $("#imagem-produto").val()
+        const imgFormatada = img.substring(12,)
+        const cnpj = sessionStorage.getItem('cnpjLogin')
+        const body = {id_categoria2, nome_produto, codigo, descricao_produto, preco_produto, imgFormatada, quantidade, cnpj}
+
+        $.ajax({
+            url: '/cadastraProduto',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(body)
+        }).then((response)=>{
+            if(response.success){
+                Swal.fire({
+                    icon: 'success',
+                    position: 'top-end',
+                    title: 'Produto inserido',
+                    timer: 1500
+                })
+                document.getElementById('nome-produto').value = ''
+                document.getElementById('codigo').value = ''
+                document.getElementById('descricao-produto').value = ''
+                document.getElementById('produto-preco').value = ''
+                document.getElementById('imagem-produto').value = ''
+                document.getElementById('quantidade').value = ''
+            }
+            else{
+                Swal.fire({
+                    icon: 'error',
+                    position: 'top-end',
+                    title: 'Erro ao inserir produto',
+                    timer: 1500
+                })
+            }
+        })
+    }
+
+
+
+    //apenas numeros na quantidade
+    function validarNumero(event) {
+        // Remove qualquer caractere que não seja número
+        event.target.value = event.target.value.replace(/[^0-9]/g, '');
+    }
+
+
+
+
+    function salvaImagemPasta(){
+    const formData = new FormData();
+    // Principais Usos de FormData:
+    // Enviar Formulários com Arquivos: O FormData é especialmente útil para enviar formulários que contêm arquivos (como imagens) para o servidor, pois ele lida com o formato multipart/form-data, que é necessário para enviar arquivos via HTTP.
+    const imagem = $("#imagem-produto")[0].files[0];  // Obtém o arquivo de imagem
+
+    if (imagem) {
+        formData.append('imagem-produto', imagem);  // Adiciona o arquivo ao FormData
+
+        $.ajax({
+            url: '/teste',  // Não precisa passar o arquivo na URL
+            method: 'POST',
+            data: formData,
+            contentType: false,  // O jQuery cuidará disso
+            processData: false,  // O jQuery não vai tentar processar os dados
+            success: function(response) {
+                console.log('Imagem enviada com sucesso!', response);
+            },
+            error: function(error) {
+                console.error('Erro ao enviar a imagem', error);
+            }
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $(document).ready(function(){
+        buscaCategoria()
+        
+    })
+
+
+</script>
+</html>
