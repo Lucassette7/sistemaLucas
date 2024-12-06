@@ -2,3 +2,8 @@ Deploy:
 
 Talvez a plataforma que vai fazer o deploy nao entenda que seu sistemas precisa dessas dependencias para rodar o sistema.
 Entaõ a melhor opção é criar um docker file, ultilizar o docker, ELE JA TRAZ TODA A INFORMAÇÃO QUE A HOSPEDAGEM PRECISA SABER DA NOSSA APLICAÇÃO
+
+
+
+
+GIT HUB VIDEO YOUTUBE: https://www.youtube.com/watch?v=s54N3QuLdKc
